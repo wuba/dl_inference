@@ -1,0 +1,8 @@
+FROM pytorch/pytorch:1.1.0-cuda10.0-cudnn7.5-devel
+
+COPY ./deps /opt/
+
+RUN rm -f /etc/localtime && cp -f /opt/localtime /etc && rm /opt/localtime
+RUN pip install -r /opt/requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+
+ENV PREDICTIVE_UNIT_SERVICE_PORT 8866

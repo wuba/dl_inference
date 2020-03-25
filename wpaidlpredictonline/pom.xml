@@ -1,0 +1,17 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.bj58.ailab</groupId>
+	<artifactId>wpaidlpredictonline</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<modules>
+		<module>demo</module>
+		<module>dlpredictonline</module>
+	</modules>
+	<packaging>pom</packaging>
+
+	<name>com.bj58.dia.rec.gul.wpai.dlpredictonline</name>
+	<url>http://maven.apache.org</url>
+
+</project>
