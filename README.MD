@@ -1,7 +1,7 @@
 # 通用深度学习推理服务
 可在生产环境中快速上线由TensorFlow、PyTorch框架训练出的深度学习模型。
   
-dl_inference是58同城推出的通用深度学习推理服务，使用dl_inference只需要将模型文件放在指定目录然后启动服务就可以进行推理请求调用。dl_inference当前支持TensorFlow和PyTorch模型，提供GPU和CPU两种部署方式，并且实现了模型多节点部署时的负载均衡策略，支持线上海量推理请求，该服务支撑了58同城各AI场景下日均超过10亿次的线上推理请求。  
+dl_inference是58同城推出的通用深度学习推理服务，使用dl_inference只需要将模型文件放在指定目录然后启动服务就可以进行推理请求调用。dl_inference当前支持TensorFlow和PyTorch模型，提供GPU和CPU两种部署方式，并且实现了模型多节点部署时的负载均衡策略，支持线上海量推理请求。    
 
 dl_inference具备的Features如下：
 * 简化深度学习模型在生产环境上的推理服务部署，只需要将模型文件放入指定目录。
@@ -63,6 +63,51 @@ PyTorch模型实例部署后，实例中请求调用流程如下：
 不同的业务场景模型实现不尽相同，为了支持在不同场景下的模型调用需求，用户可以在自定义接口文件中，重新定义模型的执行过程。默认的模型执行是单次执行，自定义接口函数中，可以多次执行同一个模型，或通过推理数据的参数修改模型内部权重，然后再进行模型调用，实现同一模型适应不通场景下的推理。开放模型调用，提高了模型实现的灵活性，从而满足不同业务方的定制化需求。
 
 项目具体实现参考[PyTorchPredictOnline](./PyTorchPredictOnline)
+
+## 如何使用dl_inference
+使用dl_inference将深度学习模型应用到线上生产环境需要进行统一接入服务部署和模型部署。统一接入服务为maven工程，源码位于项目DLPredictOnline目录下，运行环境为jdk1.8及以上版本。Maven install方式编译源码，将编译生成的jar包和lib依赖包上传到服务器部署目录下，执行启动命令启动服务。模型部署分TensorFlow和PyTorch两种框架训练的模型，下面分别加以介绍。  
+
+### TensorFlow模型部署
+服务采用Tensorflow-Serving来部署Tensorflow模型，部署方式支持docker、物理机部署，但是由于物理机部署环境安装复杂，强烈建议使用docker来部署环境  
+下面介绍容器化运行Tensorflow-Serving服务  
+#### 部署环境
+采用容器化部署方式，需要Docker环境  
+需要获取镜像，服务器需要开通外网权限  
+#### 数据准备
+准备SavedModel格式的TensorFlow模型文件，如果是CheckPoint格式需要转换成SavedModel格式  
+示例模型文件[cnn模型](./DLPredictOnline/demo/model/tensorflow/textcnn)  
+#### 部署方式
+使用docker来部署环境，下面介绍docker环境部署方式：  
+1. 从[docker hub镜像仓库](https://hub.docker.com/r/tensorflow/serving)获取镜像，以Tensorflow-Serving 1.14版本为例，docker pull tensorflow/serving:1.14.0
+2. 配置模型路径，TESTDATA="$(pwd)/testdata"，可以使用demo中的[cnn模型](./DLPredictOnline/demo/model/tensorflow/textcnn)  
+3. 运行模型，docker run -t --rm -p 8501:8501 
+            -v "$TESTDATA/saved_model_half_plus_two_cpu:/models/half_plus_two" 
+            -e MODEL_NAME=half_plus_two-69 
+            tensorflow/serving:1.14.0 &
+4. 将服务器IP 及端口 8501 配置到 GRPC服务中nodefile.txt配置文件即可  
+5. [官方提供测试模型](https://github.com/tensorflow/serving/tree/master/tensorflow_serving/servables/tensorflow/testdata)，可下载部署使用  
+
+自定义operate个性化部署时，由于TensorFlow导出模型时不会将自定义operate添加到模型文件中，所以官方提供的TensorFlow-Serving镜像无法识别。这种情况下需要将自定义operate编译到TensorFlow-Serving源码中，详细过程请参见项目[Readme](./DLPredictOnline/docs/custom%20operate.md)。  
+
+### PyTorch模型部署
+#### 数据准备
+主要需要准备两种文件，一是准备需要部署的模型文件，二是用户自定义接口文件。  
+模型文件：用dl_inference来部署模型，需要采用保存整个模型的方式生成模型文件，并且命名为为model.pth。  
+用户自定义接口文件：按照业务需要重写自定义接口文件中的前后数据处理函数，自定义模型运行函数。  
+
+#### 模型部署
+完成PyTorch模型部署只需在已安装Docker环境的物理机上进行以下三步：
+1. 准备好所需模型和接口文件放在指定目录下
+2. 使用提供的DockerFile生成PyTorch在线推理镜像
+3. 运行PyTorch服务镜像  
+
+详细过程请参见项目[Readme](./PyTorchPredictOnline/README.MD)。
+
+### 后续规划
+未来我们会继续优化扩展dl_inference的能力，计划开源如下：
+1. 支持深度学习框架Caffe所训练模型在GPU和CPU上的推理。
+2. CPU上推理性能的加速， 如兼容intel的相关机器学习库，如MKL(Math Kernel Library)、OpenVINO等。
+3. GPU上推理性能的加速， 提升单张GPU卡的吞吐率，如兼容Nvidia开源组件TensorRT等。  
 
 ## 贡献指引
 本次开源只是dl_inference贡献社区的一小步，我们真挚地希望开发者向我们提出宝贵的意见和建议。
