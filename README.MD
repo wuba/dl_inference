@@ -80,10 +80,7 @@ PyTorch模型实例部署后，实例中请求调用流程如下：
 使用docker来部署环境，下面介绍docker环境部署方式：  
 1. 从[docker hub镜像仓库](https://hub.docker.com/r/tensorflow/serving)获取镜像，以Tensorflow-Serving 1.14版本为例，docker pull tensorflow/serving:1.14.0
 2. 配置模型路径，TESTDATA="$(pwd)/testdata"，可以使用demo中的[cnn模型](./DLPredictOnline/demo/model/tensorflow/textcnn)  
-3. 运行模型，docker run -t --rm -p 8501:8501 
-            -v "$TESTDATA/saved_model_half_plus_two_cpu:/models/half_plus_two" 
-            -e MODEL_NAME=half_plus_two-69 
-            tensorflow/serving:1.14.0 &
+3. 运行模型，docker run -t --rm -p 8501:8501 -p 8500:8500 -v "$TESTDATA:/models/textcnn-69" -e MODEL_NAME=textcnn-69 tensorflow/serving:1.14.0 &
 4. 将服务器IP 及端口 8501 配置到 GRPC服务中nodefile.txt配置文件即可  
 5. [官方提供测试模型](https://github.com/tensorflow/serving/tree/master/tensorflow_serving/servables/tensorflow/testdata)，可下载部署使用  
 

@@ -53,10 +53,7 @@ timeout：超时时间配置，单位ms
 强烈建议使用此方式  
 使用demo/model/tensorflow/cnn模型部署，使用8501端口 为例：
 1. 配置模型路径：TESTDATA="demo/model/tensorflow/cnn"
-2. 运行模型，docker run -t --rm -p 8501:8501 
-               -v "$TESTDATA:/models/cnn" 
-               -e MODEL_NAME=cnntest-69 
-               tensorflow/serving:1.14.0 &  
+2. 运行模型，docker run -t --rm -p 8501:8501 -p 8500:8500 -v "$TESTDATA:/models/textcnn-69" -e MODEL_NAME=textcnn-69 tensorflow/serving:1.14.0 &
 
 #### 物理机部署
 支持物理机部署，但是物理机环境部署复杂，强烈建议使用docker环境部署    
