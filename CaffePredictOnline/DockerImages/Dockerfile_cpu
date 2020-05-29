@@ -1,0 +1,13 @@
+FROM bvlc/caffe:cpu
+
+COPY ./deps /opt/
+
+RUN pip --default-timeout=100 install -r /opt/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip uninstall -y seldon-core && \
+    pip install seldon-core -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+ENV PREDICTIVE_UNIT_SERVICE_PORT 5000
+
+WORKDIR /opt/work
+
+CMD ["/opt/work/startCaffe.sh"]

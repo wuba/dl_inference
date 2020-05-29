@@ -58,7 +58,7 @@ message PredictResponse {
 
 ### 接口调用
 #### PredictRequest
-请求Tensorflow对象构造如下所示，同时也可以参考[TensorflowClient](../dlpredictonline/src/main/java/com/bj58/ailab/dlpredictonline/client/TensorflowClient.java)  
+请求Tensorflow对象构造如下所示，同时也可以参考[README](../demo/src/main/java/com/bj58/ailab/demo/client/README.MD)  
 
 ```
 // 创建请求
@@ -107,7 +107,7 @@ PredictRequest request = predictRequestBuilder.build();
 ```
 
 #### PredictResponse
-解析预测结果如下所示，同时也可以参考[TensorflowClient](../dlpredictonline/src/main/java/com/bj58/ailab/dlpredictonline/client/TensorflowClient.java)中对结果的解析    
+解析预测结果如下所示，同时也可以参考[README](../demo/src/main/java/com/bj58/ailab/demo/client/README.MD)中对结果的解析    
 ```
 PredictResponse response;
 Map<String, TensorProto> outputsMap = response.getOutputsMap();

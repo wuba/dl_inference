@@ -70,3 +70,5 @@ com.bj58.ailab.dlpredictonline.grpc.PredictRequest全部替换成tensorflow.serv
 com.bj58.ailab.dlpredictonline.grpc.PredictResponse全部替换成tensorflow.serving.Predict.PredictResponse    
 com.bj58.ailab.dlpredictonline.grpc.PytorchPredictRequest全部替换成PredictionProtos.SeldonMessage  
 com.bj58.ailab.dlpredictonline.grpc.PytorchPredictResponse全部替换成PredictionProtos.SeldonMessage  
+com.bj58.ailab.dlpredictonline.grpc.CaffePredictRequest全部替换成PredictionProtos.SeldonMessage  
+com.bj58.ailab.dlpredictonline.grpc.CaffePredictResponse全部替换成PredictionProtos.SeldonMessage  

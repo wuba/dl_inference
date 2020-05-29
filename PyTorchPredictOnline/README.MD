@@ -1,6 +1,5 @@
 
-
-<center><h2>深度学习在线预测镜像启动程序</h2></center>
+<center><h2>PyTorch镜像启动程序</h2></center>
 ## 介绍
 
 - startPredict.sh ：在线预测任务启动脚本  
@@ -49,6 +48,8 @@ def run_model(model, x, **kwargs):
 ## PyTorch模型部署
 ### docker部署
 
+将模型文件、模型依赖文件、processor.py、predictor.py、startPredict.sh文件放在deps目录下
+
 生成镜像：  
 ```bash
 cd DockerImages
@@ -56,13 +57,9 @@ docker build -t pytorch-online:lastest .
 ```
 启动镜像：  
 ```bash
-docker run -it -p 8866:8866 pytorch-online:lastest /bin/bash
+docker run -dt -p 8866:8866 pytorch-online:lastest
 ```
-将模型文件、模型依赖文件、processor.py、predictor.py、startPredict.sh文件放在一级目录下  
-启动命令:
-```bash
-sh startPredict.sh
-```
+
 
 ### 模型调用接口
 #### 接口定义

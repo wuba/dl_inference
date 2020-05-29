@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-
 package com.bj58.ailab.dlpredictonline.grpc;
+
+import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
@@ -24,346 +25,305 @@ import static io.grpc.stub.ClientCalls.futureUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
-
 /**
- * grpc自动生成文件
+ * grpc编译自动生成文件
  * @author 58
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.20.0)",
+    value = "by gRPC proto compiler (version 1.0.0)",
     comments = "Source: wpai.proto")
-public final class WpaiDLPredictOnlineServiceGrpc {
-    private WpaiDLPredictOnlineServiceGrpc() {}
+public class WpaiDLPredictOnlineServiceGrpc {
 
-    public static final String SERVICE_NAME = "com.bj58.ailab.wpai.grpc.WpaiDLPredictOnlineService";
+  private WpaiDLPredictOnlineServiceGrpc() {}
 
-    /**
-     *  Static method descriptors that strictly reflect the proto.
-     */
-    private static volatile io.grpc.MethodDescriptor<tensorflow.serving.Predict.PredictRequest,
-        tensorflow.serving.Predict.PredictResponse> getPredictMethod;
+  public static final String SERVICE_NAME = "com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineService";
 
-    @io.grpc.stub.annotations.RpcMethod(
-        fullMethodName = SERVICE_NAME + '/' + "Predict",
-        requestType = tensorflow.serving.Predict.PredictRequest.class,
-        responseType = tensorflow.serving.Predict.PredictResponse.class,
-        methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-    public static io.grpc.MethodDescriptor<tensorflow.serving.Predict.PredictRequest,
-        tensorflow.serving.Predict.PredictResponse> getPredictMethod() {
-        io.grpc.MethodDescriptor<tensorflow.serving.Predict.PredictRequest, tensorflow.serving.Predict.PredictResponse> getPredictMethod;
-        if ((getPredictMethod = WpaiDLPredictOnlineServiceGrpc.getPredictMethod) == null) {
-            synchronized (WpaiDLPredictOnlineServiceGrpc.class) {
-                if ((getPredictMethod = WpaiDLPredictOnlineServiceGrpc.getPredictMethod) == null) {
-                    WpaiDLPredictOnlineServiceGrpc.getPredictMethod = getPredictMethod =
-                        io.grpc.MethodDescriptor.<tensorflow.serving.Predict.PredictRequest, tensorflow.serving.Predict.PredictResponse>newBuilder()
-                            .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-                            .setFullMethodName(generateFullMethodName(
-                                "com.bj58.ailab.wpai.grpc.WpaiDLPredictOnlineService", "Predict"))
-                            .setSampledToLocalTracing(true)
-                            .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                                tensorflow.serving.Predict.PredictRequest.getDefaultInstance()))
-                            .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                                tensorflow.serving.Predict.PredictResponse.getDefaultInstance()))
-                            .setSchemaDescriptor(new WpaiDLPredictOnlineServiceMethodDescriptorSupplier("Predict"))
-                            .build();
-                }
-            }
-        }
-        return getPredictMethod;
-    }
+  /**
+   * Static method descriptors that strictly reflect the proto.
+   */
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<tensorflow.serving.Predict.PredictRequest,
+      tensorflow.serving.Predict.PredictResponse> METHOD_PREDICT =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineService", "Predict"),
+          io.grpc.protobuf.ProtoUtils.marshaller(tensorflow.serving.Predict.PredictRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(tensorflow.serving.Predict.PredictResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<PredictionProtos.SeldonMessage,
+      PredictionProtos.SeldonMessage> METHOD_PYTORCH_PREDICT =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineService", "PytorchPredict"),
+          io.grpc.protobuf.ProtoUtils.marshaller(PredictionProtos.SeldonMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(PredictionProtos.SeldonMessage.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<PredictionProtos.SeldonMessage,
+      PredictionProtos.SeldonMessage> METHOD_CAFFE_PREDICT =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineService", "CaffePredict"),
+          io.grpc.protobuf.ProtoUtils.marshaller(PredictionProtos.SeldonMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(PredictionProtos.SeldonMessage.getDefaultInstance()));
 
-    private static volatile io.grpc.MethodDescriptor<PredictionProtos.SeldonMessage,
-        PredictionProtos.SeldonMessage> getPytorchPredictMethod;
+  /**
+   * Creates a new async stub that supports all call types for the service
+   */
+  public static WpaiDLPredictOnlineServiceStub newStub(io.grpc.Channel channel) {
+    return new WpaiDLPredictOnlineServiceStub(channel);
+  }
 
-    @io.grpc.stub.annotations.RpcMethod(
-        fullMethodName = SERVICE_NAME + '/' + "PytorchPredict",
-        requestType = PredictionProtos.SeldonMessage.class,
-        responseType = PredictionProtos.SeldonMessage.class,
-        methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-    public static io.grpc.MethodDescriptor<PredictionProtos.SeldonMessage,
-        PredictionProtos.SeldonMessage> getPytorchPredictMethod() {
-        io.grpc.MethodDescriptor<PredictionProtos.SeldonMessage, PredictionProtos.SeldonMessage> getPytorchPredictMethod;
-        if ((getPytorchPredictMethod = WpaiDLPredictOnlineServiceGrpc.getPytorchPredictMethod) == null) {
-            synchronized (WpaiDLPredictOnlineServiceGrpc.class) {
-                if ((getPytorchPredictMethod = WpaiDLPredictOnlineServiceGrpc.getPytorchPredictMethod) == null) {
-                    WpaiDLPredictOnlineServiceGrpc.getPytorchPredictMethod = getPytorchPredictMethod =
-                        io.grpc.MethodDescriptor.<PredictionProtos.SeldonMessage, PredictionProtos.SeldonMessage>newBuilder()
-                            .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-                            .setFullMethodName(generateFullMethodName(
-                                "com.bj58.ailab.wpai.grpc.WpaiDLPredictOnlineService", "PytorchPredict"))
-                            .setSampledToLocalTracing(true)
-                            .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                                PredictionProtos.SeldonMessage.getDefaultInstance()))
-                            .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                                PredictionProtos.SeldonMessage.getDefaultInstance()))
-                            .setSchemaDescriptor(new WpaiDLPredictOnlineServiceMethodDescriptorSupplier("PytorchPredict"))
-                            .build();
-                }
-            }
-        }
-        return getPytorchPredictMethod;
-    }
+  /**
+   * Creates a new blocking-style stub that supports unary and streaming output calls on the service
+   */
+  public static WpaiDLPredictOnlineServiceBlockingStub newBlockingStub(
+      io.grpc.Channel channel) {
+    return new WpaiDLPredictOnlineServiceBlockingStub(channel);
+  }
+
+  /**
+   * Creates a new ListenableFuture-style stub that supports unary and streaming output calls on the service
+   */
+  public static WpaiDLPredictOnlineServiceFutureStub newFutureStub(
+      io.grpc.Channel channel) {
+    return new WpaiDLPredictOnlineServiceFutureStub(channel);
+  }
+
+  /**
+   */
+  public static abstract class WpaiDLPredictOnlineServiceImplBase implements io.grpc.BindableService {
 
     /**
-     * Creates a new async stub that supports all call types for the service
      */
-    public static WpaiDLPredictOnlineServiceStub newStub(io.grpc.Channel channel) {
-        return new WpaiDLPredictOnlineServiceStub(channel);
-    }
-
-    /**
-     * Creates a new blocking-style stub that supports unary and streaming output calls on the service
-     */
-    public static WpaiDLPredictOnlineServiceBlockingStub newBlockingStub(
-        io.grpc.Channel channel) {
-        return new WpaiDLPredictOnlineServiceBlockingStub(channel);
-    }
-
-    /**
-     * Creates a new ListenableFuture-style stub that supports unary calls on the service
-     */
-    public static WpaiDLPredictOnlineServiceFutureStub newFutureStub(
-        io.grpc.Channel channel) {
-        return new WpaiDLPredictOnlineServiceFutureStub(channel);
+    public void predict(tensorflow.serving.Predict.PredictRequest request,
+        io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PREDICT, responseObserver);
     }
 
     /**
      */
-    public static abstract class WpaiDLPredictOnlineServiceImplBase implements io.grpc.BindableService {
-
-        /**
-         */
-        public void predict(tensorflow.serving.Predict.PredictRequest request,
-            io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse> responseObserver) {
-            asyncUnimplementedUnaryCall(getPredictMethod(), responseObserver);
-        }
-
-        /**
-         */
-        public void pytorchPredict(PredictionProtos.SeldonMessage request,
-            io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
-            asyncUnimplementedUnaryCall(getPytorchPredictMethod(), responseObserver);
-        }
-
-        @Override public final io.grpc.ServerServiceDefinition bindService() {
-            return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-                .addMethod(
-                    getPredictMethod(),
-                    asyncUnaryCall(
-                        new MethodHandlers<
-                            tensorflow.serving.Predict.PredictRequest,
-                            tensorflow.serving.Predict.PredictResponse>(
-                            this, METHODID_PREDICT)))
-                .addMethod(
-                    getPytorchPredictMethod(),
-                    asyncUnaryCall(
-                        new MethodHandlers<
-                            PredictionProtos.SeldonMessage,
-                            PredictionProtos.SeldonMessage>(
-                            this, METHODID_PYTORCH_PREDICT)))
-                .build();
-        }
+    public void pytorchPredict(PredictionProtos.SeldonMessage request,
+        io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PYTORCH_PREDICT, responseObserver);
     }
 
     /**
      */
-    public static final class WpaiDLPredictOnlineServiceStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceStub> {
-        private WpaiDLPredictOnlineServiceStub(io.grpc.Channel channel) {
-            super(channel);
-        }
+    public void caffePredict(PredictionProtos.SeldonMessage request,
+        io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_CAFFE_PREDICT, responseObserver);
+    }
 
-        private WpaiDLPredictOnlineServiceStub(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            super(channel, callOptions);
-        }
-
-        @Override
-        protected WpaiDLPredictOnlineServiceStub build(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            return new WpaiDLPredictOnlineServiceStub(channel, callOptions);
-        }
-
-        /**
-         */
-        public void predict(tensorflow.serving.Predict.PredictRequest request,
-            io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse> responseObserver) {
+    @Override public io.grpc.ServerServiceDefinition bindService() {
+      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            METHOD_PREDICT,
             asyncUnaryCall(
-                getChannel().newCall(getPredictMethod(), getCallOptions()), request, responseObserver);
-        }
-
-        /**
-         */
-        public void pytorchPredict(PredictionProtos.SeldonMessage request,
-            io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+              new MethodHandlers<
+                tensorflow.serving.Predict.PredictRequest,
+                tensorflow.serving.Predict.PredictResponse>(
+                  this, METHODID_PREDICT)))
+          .addMethod(
+            METHOD_PYTORCH_PREDICT,
             asyncUnaryCall(
-                getChannel().newCall(getPytorchPredictMethod(), getCallOptions()), request, responseObserver);
-        }
+              new MethodHandlers<
+                PredictionProtos.SeldonMessage,
+                PredictionProtos.SeldonMessage>(
+                  this, METHODID_PYTORCH_PREDICT)))
+          .addMethod(
+            METHOD_CAFFE_PREDICT,
+            asyncUnaryCall(
+              new MethodHandlers<
+                PredictionProtos.SeldonMessage,
+                PredictionProtos.SeldonMessage>(
+                  this, METHODID_CAFFE_PREDICT)))
+          .build();
+    }
+  }
+
+  /**
+   */
+  public static final class WpaiDLPredictOnlineServiceStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceStub> {
+    private WpaiDLPredictOnlineServiceStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private WpaiDLPredictOnlineServiceStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @Override
+    protected WpaiDLPredictOnlineServiceStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new WpaiDLPredictOnlineServiceStub(channel, callOptions);
     }
 
     /**
      */
-    public static final class WpaiDLPredictOnlineServiceBlockingStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceBlockingStub> {
-        private WpaiDLPredictOnlineServiceBlockingStub(io.grpc.Channel channel) {
-            super(channel);
-        }
-
-        private WpaiDLPredictOnlineServiceBlockingStub(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            super(channel, callOptions);
-        }
-
-        @Override
-        protected WpaiDLPredictOnlineServiceBlockingStub build(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            return new WpaiDLPredictOnlineServiceBlockingStub(channel, callOptions);
-        }
-
-        /**
-         */
-        public tensorflow.serving.Predict.PredictResponse predict(tensorflow.serving.Predict.PredictRequest request) {
-            return blockingUnaryCall(
-                getChannel(), getPredictMethod(), getCallOptions(), request);
-        }
-
-        /**
-         */
-        public PredictionProtos.SeldonMessage pytorchPredict(PredictionProtos.SeldonMessage request) {
-            return blockingUnaryCall(
-                getChannel(), getPytorchPredictMethod(), getCallOptions(), request);
-        }
+    public void predict(tensorflow.serving.Predict.PredictRequest request,
+        io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_PREDICT, getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public static final class WpaiDLPredictOnlineServiceFutureStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceFutureStub> {
-        private WpaiDLPredictOnlineServiceFutureStub(io.grpc.Channel channel) {
-            super(channel);
-        }
-
-        private WpaiDLPredictOnlineServiceFutureStub(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            super(channel, callOptions);
-        }
-
-        @Override
-        protected WpaiDLPredictOnlineServiceFutureStub build(io.grpc.Channel channel,
-            io.grpc.CallOptions callOptions) {
-            return new WpaiDLPredictOnlineServiceFutureStub(channel, callOptions);
-        }
-
-        /**
-         */
-        public com.google.common.util.concurrent.ListenableFuture<tensorflow.serving.Predict.PredictResponse> predict(
-            tensorflow.serving.Predict.PredictRequest request) {
-            return futureUnaryCall(
-                getChannel().newCall(getPredictMethod(), getCallOptions()), request);
-        }
-
-        /**
-         */
-        public com.google.common.util.concurrent.ListenableFuture<PredictionProtos.SeldonMessage> pytorchPredict(
-            PredictionProtos.SeldonMessage request) {
-            return futureUnaryCall(
-                getChannel().newCall(getPytorchPredictMethod(), getCallOptions()), request);
-        }
+    public void pytorchPredict(PredictionProtos.SeldonMessage request,
+        io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_PYTORCH_PREDICT, getCallOptions()), request, responseObserver);
     }
 
-    private static final int METHODID_PREDICT = 0;
-    private static final int METHODID_PYTORCH_PREDICT = 1;
+    /**
+     */
+    public void caffePredict(PredictionProtos.SeldonMessage request,
+        io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_CAFFE_PREDICT, getCallOptions()), request, responseObserver);
+    }
+  }
 
-    private static final class MethodHandlers<Req, Resp> implements
-        io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
-        io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
-        io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
-        io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-        private final WpaiDLPredictOnlineServiceImplBase serviceImpl;
-        private final int methodId;
-
-        MethodHandlers(WpaiDLPredictOnlineServiceImplBase serviceImpl, int methodId) {
-            this.serviceImpl = serviceImpl;
-            this.methodId = methodId;
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
-            switch (methodId) {
-                case METHODID_PREDICT:
-                    serviceImpl.predict((tensorflow.serving.Predict.PredictRequest) request,
-                        (io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse>) responseObserver);
-                    break;
-                case METHODID_PYTORCH_PREDICT:
-                    serviceImpl.pytorchPredict((PredictionProtos.SeldonMessage) request,
-                        (io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage>) responseObserver);
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public io.grpc.stub.StreamObserver<Req> invoke(
-            io.grpc.stub.StreamObserver<Resp> responseObserver) {
-            switch (methodId) {
-                default:
-                    throw new AssertionError();
-            }
-        }
+  /**
+   */
+  public static final class WpaiDLPredictOnlineServiceBlockingStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceBlockingStub> {
+    private WpaiDLPredictOnlineServiceBlockingStub(io.grpc.Channel channel) {
+      super(channel);
     }
 
-    private static abstract class WpaiDLPredictOnlineServiceBaseDescriptorSupplier
-        implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
-        WpaiDLPredictOnlineServiceBaseDescriptorSupplier() {}
-
-        @Override
-        public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-            return WpaiDLPredictOnline.getDescriptor();
-        }
-
-        @Override
-        public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
-            return getFileDescriptor().findServiceByName("WpaiDLPredictOnlineService");
-        }
+    private WpaiDLPredictOnlineServiceBlockingStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
     }
 
-    private static final class WpaiDLPredictOnlineServiceFileDescriptorSupplier
-        extends WpaiDLPredictOnlineServiceBaseDescriptorSupplier {
-        WpaiDLPredictOnlineServiceFileDescriptorSupplier() {}
+    @Override
+    protected WpaiDLPredictOnlineServiceBlockingStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new WpaiDLPredictOnlineServiceBlockingStub(channel, callOptions);
     }
 
-    private static final class WpaiDLPredictOnlineServiceMethodDescriptorSupplier
-        extends WpaiDLPredictOnlineServiceBaseDescriptorSupplier
-        implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-        private final String methodName;
-
-        WpaiDLPredictOnlineServiceMethodDescriptorSupplier(String methodName) {
-            this.methodName = methodName;
-        }
-
-        @Override
-        public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
-            return getServiceDescriptor().findMethodByName(methodName);
-        }
+    /**
+     */
+    public tensorflow.serving.Predict.PredictResponse predict(tensorflow.serving.Predict.PredictRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_PREDICT, getCallOptions(), request);
     }
 
-    private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
-
-    public static io.grpc.ServiceDescriptor getServiceDescriptor() {
-        io.grpc.ServiceDescriptor result = serviceDescriptor;
-        if (result == null) {
-            synchronized (WpaiDLPredictOnlineServiceGrpc.class) {
-                result = serviceDescriptor;
-                if (result == null) {
-                    serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
-                        .setSchemaDescriptor(new WpaiDLPredictOnlineServiceFileDescriptorSupplier())
-                        .addMethod(getPredictMethod())
-                        .addMethod(getPytorchPredictMethod())
-                        .build();
-                }
-            }
-        }
-        return result;
+    /**
+     */
+    public PredictionProtos.SeldonMessage pytorchPredict(PredictionProtos.SeldonMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_PYTORCH_PREDICT, getCallOptions(), request);
     }
+
+    /**
+     */
+    public PredictionProtos.SeldonMessage caffePredict(PredictionProtos.SeldonMessage request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_CAFFE_PREDICT, getCallOptions(), request);
+    }
+  }
+
+  /**
+   */
+  public static final class WpaiDLPredictOnlineServiceFutureStub extends io.grpc.stub.AbstractStub<WpaiDLPredictOnlineServiceFutureStub> {
+    private WpaiDLPredictOnlineServiceFutureStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private WpaiDLPredictOnlineServiceFutureStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @Override
+    protected WpaiDLPredictOnlineServiceFutureStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new WpaiDLPredictOnlineServiceFutureStub(channel, callOptions);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<tensorflow.serving.Predict.PredictResponse> predict(
+        tensorflow.serving.Predict.PredictRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_PREDICT, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<PredictionProtos.SeldonMessage> pytorchPredict(
+        PredictionProtos.SeldonMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_PYTORCH_PREDICT, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<PredictionProtos.SeldonMessage> caffePredict(
+        PredictionProtos.SeldonMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_CAFFE_PREDICT, getCallOptions()), request);
+    }
+  }
+
+  private static final int METHODID_PREDICT = 0;
+  private static final int METHODID_PYTORCH_PREDICT = 1;
+  private static final int METHODID_CAFFE_PREDICT = 2;
+
+  private static class MethodHandlers<Req, Resp> implements
+      io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
+    private final WpaiDLPredictOnlineServiceImplBase serviceImpl;
+    private final int methodId;
+
+    public MethodHandlers(WpaiDLPredictOnlineServiceImplBase serviceImpl, int methodId) {
+      this.serviceImpl = serviceImpl;
+      this.methodId = methodId;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
+      switch (methodId) {
+        case METHODID_PREDICT:
+          serviceImpl.predict((tensorflow.serving.Predict.PredictRequest) request,
+              (io.grpc.stub.StreamObserver<tensorflow.serving.Predict.PredictResponse>) responseObserver);
+          break;
+        case METHODID_PYTORCH_PREDICT:
+          serviceImpl.pytorchPredict((PredictionProtos.SeldonMessage) request,
+              (io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage>) responseObserver);
+          break;
+        case METHODID_CAFFE_PREDICT:
+          serviceImpl.caffePredict((PredictionProtos.SeldonMessage) request,
+              (io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage>) responseObserver);
+          break;
+        default:
+          throw new AssertionError();
+      }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public io.grpc.stub.StreamObserver<Req> invoke(
+        io.grpc.stub.StreamObserver<Resp> responseObserver) {
+      switch (methodId) {
+        default:
+          throw new AssertionError();
+      }
+    }
+  }
+
+  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
+    return new io.grpc.ServiceDescriptor(SERVICE_NAME,
+        METHOD_PREDICT,
+        METHOD_PYTORCH_PREDICT,
+        METHOD_CAFFE_PREDICT);
+  }
+
 }

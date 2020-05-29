@@ -26,9 +26,10 @@ package com.bj58.ailab.dlpredictonline.grpc;
 service WpaiDLPredictOnlineService {
     rpc Predict(PredictRequest) returns (PredictResponse) {};
     rpc PytorchPredict(PytorchPredictRequest) returns (PytorchPredictResponse) {};
+    rpc CaffePredict(CaffePredictRequest) returns (CaffePredictResponse) {};
 }
 
-message PytorchPredictRequest {
+message PytorchPredictRequest{
     string inputs = 1;
 }
 
@@ -36,10 +37,18 @@ message PytorchPredictResponse{
     string outputs = 1;
 }
 
-message PredictRequest {
+message PredictRequest{
     string inputs = 1;
 }
 
 message PredictResponse{
+    string outputs = 1;
+}
+
+message CaffePredictRequest{
+    string inputs = 1;
+}
+
+message CaffePredictResponse{
     string outputs = 1;
 }

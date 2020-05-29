@@ -17,8 +17,8 @@
 
 package com.bj58.ailab.dlpredictonline.components;
 
-import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
 import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
+import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
 import com.bj58.ailab.dlpredictonline.init.WpaiPredictOnlineInit;
 import com.bj58.ailab.dlpredictonline.pytorchonline.PytorchOnlineService;
 import com.bj58.ailab.dlpredictonline.tensorflowserving.TensorflowServingService;
@@ -142,6 +142,32 @@ public class WPAIDLPredictOnlineGRPCService {
                 logger.info("pytorchPredict taskId={} predict spend {} ms", taskId, spend);
             }catch (Exception e){
                 logger.error("pytorchPredict error, msg={}", e.getMessage());
+            }
+        }
+
+        @Override
+        public void caffePredict(
+            PredictionProtos.SeldonMessage request,
+            io.grpc.stub.StreamObserver<PredictionProtos.SeldonMessage> responseObserver) {
+            try {
+                long start = System.currentTimeMillis();
+                Map<String, Value> tagsMap = request.getMeta().getTagsMap();
+                String taskIdKey = "taskid";
+                if (!tagsMap.containsKey(taskIdKey)) {
+                    responseObserver.onNext(null);
+                    responseObserver.onCompleted();
+                    return;
+                }
+                Value taskIdValue = tagsMap.get(taskIdKey);
+                int taskId = (int) taskIdValue.getNumberValue();
+                PredictionProtos.SeldonMessage response = PytorchOnlineService
+                    .predict(taskId, request);
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+                int spend = (int) (System.currentTimeMillis() - start);
+                logger.info("caffePredict taskId={} predict spend {} ms", taskId, spend);
+            }catch (Exception e){
+                logger.error("caffePredict error, msg={}", e.getMessage());
             }
         }
     }

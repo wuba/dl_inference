@@ -38,7 +38,7 @@ class predictor:
             run_exists = ('run_model' in locals() or 'run_model' in globals()) and isinstance(run_model, FunctionType)
             if run_exists:
                 result = run_model(model, x, **kwargs)
-            elif "tags" in kwargs["meta"]:
+            elif "tags" in kwargs["meta"] and len(kwargs["meta"]["tags"]) > 1:
                 y = x.to(self.device)
                 result = self.model(y, **(kwargs["meta"]["tags"]))
             else:

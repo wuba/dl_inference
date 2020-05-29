@@ -6,7 +6,6 @@ target/
 */target/**
 */log/**
 name*.txt
-*.txt
 .settings/**
 */.settings/**
 */.classpath

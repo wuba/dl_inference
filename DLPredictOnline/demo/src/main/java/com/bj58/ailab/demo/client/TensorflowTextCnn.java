@@ -1,5 +1,23 @@
+/**
+ * Copyright (c) 2020-present, Wuba, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package com.bj58.ailab.demo.client;
 
+import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
 import com.google.protobuf.ByteString;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -16,28 +34,28 @@ import tensorflow.serving.Predict.PredictResponse;
 /**
  * Tensorflow textcnn 模型示例
  * @author 58
+ * 模型文件位于 demo/model/tensorflow/textcnn
  **/
 public class TensorflowTextCnn {
 
     public static final String EOS      = "<eos>";
     public static final String PAD      = "<pad>";
     public static final String SPACE    = "<space>";
-    public static final String defaultIntentLabel = "__label__unknown";
+    public static final String DEFALUT_INTENT_LABEL = "__label__unknown";
 
     public static final String OUTPUTS_KEY_OUTPUT = "output";
     public static final String OUTPUTS_KEY_SCORE = "score";
 
-    private static final int seqLen = 72;
+    private static final int SEQ_LEN = 72;
 
-    public PredictRequest getRequest(){
+    public PredictRequest getRequest(String sentence){
         // 不同样例sentence不一样
-        String sentence = "不用了谢谢";
         List<String> wordList = getWordList(sentence);
-        wordList = padding(wordList, seqLen);
+        wordList = padding(wordList, SEQ_LEN);
         List<Integer> lenList = new ArrayList<Integer>();
-        lenList.add(seqLen);
+        lenList.add(SEQ_LEN);
         List<String> labelList = new ArrayList<String>();
-        labelList.add(defaultIntentLabel);
+        labelList.add(DEFALUT_INTENT_LABEL);
 
         Charset charset = Charset.forName("UTF-8");
 
@@ -138,5 +156,19 @@ public class TensorflowTextCnn {
 
         labelsProtoBuilder.setTensorShape(labelsShapeBuilder.build());
         return labelsProtoBuilder.build();
+    }
+
+    public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
+        TensorflowTextCnn tensorflowTextCnn = new TensorflowTextCnn();
+        String sentence = "不用了谢谢";
+        PredictRequest request = tensorflowTextCnn.getRequest(sentence);
+        Predict.PredictResponse response = null;
+        try {
+            //使用阻塞 stub调用
+            response = blockingStub.predict(request);
+            tensorflowTextCnn.printResult(response);
+        } catch (Exception e) {
+            System.err.println("blockingStub.predict error, msg=" + e.getMessage()) ;
+        }
     }
 }

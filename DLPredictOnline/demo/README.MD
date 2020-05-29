@@ -40,7 +40,7 @@ signature_def['prediction']:
         shape: (-1, 3)
         name: inference/output:0
   Method name is: tensorflow/serving/predict
-```  
+```
 
 ### 服务部署
 部署Tensorflow模型后部署服务，以部署在./opensources 目录下为例，部署步骤如下：
@@ -109,7 +109,7 @@ java -classpath $libs com.bj58.ailab.dlpredictonline.components.WPAIDLPredictOnl
     ├── slf4j-api-1.7.12.jar
     ├── slf4j-log4j12-1.7.21.jar
     └── tensorflow-client-1.4-1.jar
-```  
+```
 
 ### 运行客户端
 可直接在IDEA上运行[client](src/main/java/com/bj58/ailab/demo/client/WpaiClient.java)，传入服务部署ip port即可  
@@ -128,6 +128,16 @@ key=__label__offer, value=1.6348207E-5
 key=__label__thankyou, value=1.5074686E-5
 ```
 
-## pytorch
-pytorch 客户端示例代码 对应 model/pytorch 模型
+## PyTorch Demo
+### PyTorch 模型部署
 
+PyTorch模型部署步骤如下：
+
+1. 下载[待部署的PyTorch模型文件](model/pytorch/watermark-centernet)到本地/model/deps  
+   下载[startPredict.sh](../../PyTorchPredictOnline/startPredict.sh), [gpu/predictor.py](../../PyTorchPredictOnline/gpu/predictor.py), [localtime](../../PyTorchPredictOnline/DockerImages/deps/localtime)到本地/model/deps
+   下载[Dockerfile_gpu](../../PyTorchPredictOnline/DockerImages/Dockerfile_gpu)到本地/model,并重命名为Dockerfile
+2. 创建镜像，命令：
+   docker build -t pytorch-online:lastest .
+3. 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
+   docker run -dt -p 8866:8866 pytorch-online:lastest &
+4. -p 8866:8866 grpc端口
