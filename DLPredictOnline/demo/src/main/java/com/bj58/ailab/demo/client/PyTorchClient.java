@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * PyTorch 图像水印识别模型示例
+ * PyTorch 图像数字识别模型示例
  * @author 58
  * 模型文件位于 demo/model/pytorch
  **/
@@ -87,9 +87,9 @@ public class PyTorchClient {
     }
 
     public static void client(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
-        String imagePath = "data";
+        String imagePath = "test_data";
         if (CommonUtil.checkSystemIsWin()){
-            imagePath = "demo\\model\\pytorch\\watermark-centernet\\data";
+            imagePath = "demo\\model\\pytorch\\mnist\\test_data";
         }
         System.out.println(System.getProperty("user.dir"));
         PyTorchClient pyTorchClient = new PyTorchClient();
@@ -100,4 +100,5 @@ public class PyTorchClient {
             pyTorchClient.printResult(response);
         }
     }
+    
 }

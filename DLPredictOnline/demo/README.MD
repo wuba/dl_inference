@@ -9,8 +9,9 @@ Tensorflow模型部署步骤如下：
 2. 运行容器，启动tensorflow-serving，绑定到宿主机8501端口上，命令：
      docker run -t --rm -p 8501:8501 -p 8500:8500 -v "$TESTDATA:/models/textcnn-69" -e MODEL_NAME=textcnn-69 tensorflow/serving:1.14.0 &  
 3. -e MODEL_NAME=textcnn-69 表示模型名称，其中69表示此次测试的任务id，由用户自己指定  
-4. -p 8501:8501 http端口 表示将宿主机端口8051绑定到容器8051端口上，这样可以通过物理机8051端口可以直接访问容器中服务
-5. -p 8500:8500 grpc端口  
+4. -v /models/textcnn-69 容器内部目录必须符合/models/$MODEL_NAME 规范
+5. -p 8501:8501 http端口 表示将宿主机端口8051绑定到容器8051端口上，这样可以通过物理机8051端口可以直接访问容器中服务
+6. -p 8500:8500 grpc端口  
 
 模型启动日志如下所示：
 ![模型启动日志](tensorflow-serving start log.png)  
@@ -133,7 +134,7 @@ key=__label__thankyou, value=1.5074686E-5
 
 PyTorch模型部署步骤如下：
 
-1. 下载[待部署的PyTorch模型文件](model/pytorch/watermark-centernet)到本地/model/deps  
+1. 下载[待部署的PyTorch模型文件](model/pytorch/mnist)到本地/model/deps  
    下载[startPredict.sh](../../PyTorchPredictOnline/startPredict.sh), [gpu/predictor.py](../../PyTorchPredictOnline/gpu/predictor.py), [localtime](../../PyTorchPredictOnline/DockerImages/deps/localtime)到本地/model/deps
    下载[Dockerfile_gpu](../../PyTorchPredictOnline/DockerImages/Dockerfile_gpu)到本地/model,并重命名为Dockerfile
 2. 创建镜像，命令：

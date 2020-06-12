@@ -80,7 +80,8 @@ public class WpaiClient {
     }
 
     public void greet(String name) {
-        TensorflowDssm.tensorflowClient(blockingStub);
+//        TensorflowDssm.tensorflowClient(blockingStub);
+        TensorflowWideAndDeep.tensorflowClient(blockingStub);
     }
 
     public void shutdown() throws InterruptedException {

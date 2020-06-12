@@ -27,10 +27,7 @@ import org.tensorflow.framework.TensorShapeProto;
 import tensorflow.serving.Model;
 import tensorflow.serving.Predict;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,90 +73,38 @@ public class TensorflowWideAndDeep {
 
     public Predict.PredictRequest getRequest(List<String> testDataArrayList){
 
-        List<ByteString> inputStrs = testDataArrayList.stream().map(o -> {
+        List<ByteString> inputStrs =
+            testDataArrayList.stream()
+                .map(
+                    o -> {
+                        String[] elems = o.toString().split(",", -1);
+                        Map<String, Feature> inputFeatures = new HashMap(1000);
+                        buildFeature(FeatureType.FLOAT_TYPE, "age", inputFeatures, elems[0]);
+                        buildFeature(FeatureType.STRING_TYPE, "workclass", inputFeatures, elems[1]);
+                        buildFeature(FeatureType.FLOAT_TYPE, "fnlwgt", inputFeatures, elems[2]);
+                        buildFeature(FeatureType.STRING_TYPE, "education", inputFeatures, elems[3]);
+                        buildFeature(FeatureType.FLOAT_TYPE, "education_num", inputFeatures, elems[4]);
+                        buildFeature(FeatureType.STRING_TYPE, "marital_status", inputFeatures, elems[5]);
+                        buildFeature(FeatureType.STRING_TYPE, "occupation", inputFeatures, elems[6]);
+                        buildFeature(FeatureType.STRING_TYPE, "relationship", inputFeatures, elems[7]);
+                        buildFeature(FeatureType.STRING_TYPE, "race", inputFeatures, elems[8]);
+                        buildFeature(FeatureType.STRING_TYPE, "gender", inputFeatures, elems[9]);
 
-            String[] elems = o.toString().split("\\|", -1);
-            Map<String, Feature> inputFeatures = new HashMap(1000);
+                        buildFeature(FeatureType.FLOAT_TYPE, "capital_gain", inputFeatures, elems[10]);
+                        buildFeature(FeatureType.FLOAT_TYPE, "capital_loss", inputFeatures, elems[11]);
+                        buildFeature(FeatureType.FLOAT_TYPE, "hours_per_week", inputFeatures, elems[12]);
+                        buildFeature(FeatureType.STRING_TYPE, "native_country", inputFeatures, elems[13]);
 
-            buildFeature(FeatureType.INT_TYPE, "week", inputFeatures, elems[0]);
-            buildFeature(FeatureType.INT_TYPE, "hour", inputFeatures, elems[1]);
-            buildFeature(FeatureType.INT_TYPE, "page_id", inputFeatures, "0");
-            buildFeature(FeatureType.INT_TYPE, "pos_in_page", inputFeatures, "0");
-            buildFeature(FeatureType.INT_TYPE, "city_id", inputFeatures, elems[2]);
-            buildFeature(FeatureType.INT_TYPE, "cate", inputFeatures, elems[3]);
-            buildFeature(FeatureType.STRING_TYPE, "region", inputFeatures, elems[4]);
-            buildFeature(FeatureType.STRING_TYPE, "shangquan", inputFeatures, elems[5]);
-            buildFeature(FeatureType.INT_TYPE, "areaId", inputFeatures, elems[6]);
-            buildFeature(FeatureType.INT_TYPE, "priceId", inputFeatures, elems[7]);
-            buildFeature(FeatureType.INT_TYPE, "pAreaId", inputFeatures, elems[8]);
-            buildFeature(FeatureType.INT_TYPE, "pPriceId", inputFeatures, elems[9]);
-
-            buildFeature(FeatureType.FLOAT_TYPE, "cateCount", inputFeatures, elems[10]);
-            buildFeature(FeatureType.FLOAT_TYPE, "regionCount", inputFeatures, elems[11]);
-            buildFeature(FeatureType.FLOAT_TYPE, "shangquanCount", inputFeatures, elems[12]);
-            buildFeature(FeatureType.FLOAT_TYPE, "areaCount", inputFeatures, elems[13]);
-            buildFeature(FeatureType.FLOAT_TYPE, "priceCount", inputFeatures, elems[14]);
-
-            buildFeature(FeatureType.FLOAT_TYPE, "uDc3", inputFeatures, elems[15]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDc7", inputFeatures, elems[16]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDc15", inputFeatures, elems[17]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDt3", inputFeatures, elems[18]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDt7", inputFeatures, elems[19]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDt15", inputFeatures, elems[20]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDm3", inputFeatures, elems[21]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDm7", inputFeatures, elems[22]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDm15", inputFeatures, elems[23]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDct3", inputFeatures, elems[24]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDct7", inputFeatures, elems[25]);
-            buildFeature(FeatureType.FLOAT_TYPE, "uDct15", inputFeatures, elems[26]);
-
-            buildFeature(FeatureType.FLOAT_TYPE, "proDc3", inputFeatures, elems[27]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDc7", inputFeatures, elems[28]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDc15", inputFeatures, elems[29]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDt3", inputFeatures, elems[30]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDt7", inputFeatures, elems[31]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDt15", inputFeatures, elems[32]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDm3", inputFeatures, elems[33]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDm7", inputFeatures, elems[34]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDm15", inputFeatures, elems[35]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtr3", inputFeatures, elems[36]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtr7", inputFeatures, elems[37]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtr15", inputFeatures, elems[38]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDct3", inputFeatures, elems[39]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDct7", inputFeatures, elems[40]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proDct15", inputFeatures, elems[41]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtrt3", inputFeatures, elems[42]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtrt7", inputFeatures, elems[43]);
-            buildFeature(FeatureType.FLOAT_TYPE, "proCtrt15", inputFeatures, elems[44]);
-
-            buildFeature(FeatureType.INT_TYPE, "shangquanRank", inputFeatures, elems[45]);
-
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l1", inputFeatures, elems[46]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l2", inputFeatures, elems[47]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l3", inputFeatures, elems[48]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l4", inputFeatures, elems[49]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l5", inputFeatures, elems[50]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l6", inputFeatures, elems[51]);
-            buildFeature(FeatureType.FLOAT_TYPE, "xzl_l7", inputFeatures, elems[52]);
-            buildFeature(FeatureType.FLOAT_TYPE, "sp_l1", inputFeatures, elems[53]);
-            buildFeature(FeatureType.FLOAT_TYPE, "sp_l2", inputFeatures, elems[54]);
-            buildFeature(FeatureType.FLOAT_TYPE, "sp_l3", inputFeatures, elems[55]);
-            buildFeature(FeatureType.FLOAT_TYPE, "sp_l4", inputFeatures, elems[56]);
-            buildFeature(FeatureType.FLOAT_TYPE, "sp_l5", inputFeatures, elems[57]);
-            buildFeature(FeatureType.INT_TYPE, "sp_l6", inputFeatures, elems[58]);
-            buildFeature(FeatureType.FLOAT_TYPE, "other_sp", inputFeatures, elems[59]);
-            buildFeature(FeatureType.FLOAT_TYPE, "other_ax", inputFeatures, elems[60]);
-            buildFeature(FeatureType.FLOAT_TYPE, "other_qj", inputFeatures, elems[61]);
-            buildFeature(FeatureType.FLOAT_TYPE, "price", inputFeatures, elems[62]);
-            buildFeature(FeatureType.FLOAT_TYPE, "area", inputFeatures, elems[63]);
-
-            buildFeature(FeatureType.INT_TYPE, "sample_age", inputFeatures, "0");
-
-
-            Features featuresSerializeToString = Features.newBuilder().putAllFeature(inputFeatures).build();
-            ByteString inputStr = Example.newBuilder().setFeatures(featuresSerializeToString).build().toByteString();
-            return inputStr;
-        }).collect(Collectors.toList());
+                        Features featuresSerializeToString =
+                            Features.newBuilder().putAllFeature(inputFeatures).build();
+                        ByteString inputStr =
+                            Example.newBuilder()
+                                .setFeatures(featuresSerializeToString)
+                                .build()
+                                .toByteString();
+                        return inputStr;
+                    })
+                .collect(Collectors.toList());
 
         TensorShapeProto.Builder tensorShapeBuilder = TensorShapeProto.newBuilder();
 
@@ -192,8 +137,8 @@ public class TensorflowWideAndDeep {
         }
         List<Float> predict = outputs.getFloatValList();
         int step = 2;
-        for (int i = 1; i < predict.size(); i = i + step) {
-            System.out.println(predict.get(i));
+        for (int i = 0; i < predict.size(); i = i + step) {
+            System.out.println(predict.get(i) + "," + predict.get(i + 1));
         }
     }
 
@@ -210,9 +155,9 @@ public class TensorflowWideAndDeep {
     }
 
     public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
-        String dataFile = "data.txt";
+        String dataFile = "census_input.csv";
         if (CommonUtil.checkSystemIsWin()){
-            dataFile = "demo\\model\\tensorflow\\wideAndDeep\\data.txt";
+            dataFile = "demo\\model\\tensorflow\\wideAndDeep\\census_input.csv";
         }
         TensorflowWideAndDeep tensorflowWideAndDeep = new TensorflowWideAndDeep();
         List<String> dataList = null;

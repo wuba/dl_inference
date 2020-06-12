@@ -129,8 +129,8 @@ Caffe详细过程参见项目[Readme](./CaffePredictOnline/README.md)。
 3. Tensorflow/PyTorch/Caffe等不同深度学习框架模型推理实现介绍
 4. 以具体示例介绍推理服务部署  
    (1). Tensorflow模型示例1：[qa_match问答匹配模型](./DLPredictOnline/demo/model/tensorflow/sptm)部署  
-   (2). Tensorflow模型示例2：[推荐排序wide&deep模型](./DLPredictOnline/demo/model/tensorflow/wideAndDeep)部署  
-   (3). PyTorch模型示例：[图像水印识别模型](./DLPredictOnline/demo/model/pytorch/watermark-centernet)部署  
+   (2). Tensorflow模型示例2：[二分类wide&deep模型](./DLPredictOnline/demo/model/tensorflow/wideAndDeep)部署  
+   (3). PyTorch模型示例：[图像数字识别模型](./DLPredictOnline/demo/model/pytorch/mnist)部署  
    (4). Caffe模型示例：[图像分类模型](./DLPredictOnline/demo/model/caffe)部署  
 
 直播录像回放可阅读 58AILab 公众号文章: [直播回放 | 通用深度学习推理服务dl_inference开源项目解析](https://mp.weixin.qq.com/s/TYj2cqeWETmK6kEXrdaSzg)      
