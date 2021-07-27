@@ -130,7 +130,7 @@ key=__label__thankyou, value=1.5074686E-5
 ```
 
 ## PyTorch Demo
-### PyTorch 模型部署
+### PyTorch-Mnist部署
 
 PyTorch模型部署步骤如下：
 
@@ -142,3 +142,45 @@ PyTorch模型部署步骤如下：
 3. 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
    docker run -dt -p 8866:8866 pytorch-online:lastest &
 4. -p 8866:8866 grpc端口
+
+### MMoE模型部署
+
+1. 下载待部署的[MMoE模型文件](model/pytorch/mmoe/model.pth),[Models](model/pytorch/mmoe/Models),[startPredict.sh](../../PyTorchPredictOnline/startPredict.sh), [cpu/predictor.py](../../PyTorchPredictOnline/cpu/predictor.py),[cpu/processor.py](../../PyTorchPredictOnline/cpu/processor.py),[localtime](../../PyTorchPredictOnline/DockerImages/deps/localtime)到本地/model/deps
+
+2. 下载[Dockerfile_cpu](../../PyTorchPredictOnline/DockerImages/Dockerfile_cpu)到本地/model,并重命名为Dockerfile
+
+3. 修改Dockerfile文件内容，更新镜像版本为1.8
+
+```dockerfile
+FROM floydhub/pytorch:1.8.0-py3.58
+
+COPY ./deps /opt/
+
+RUN rm -rf /etc/apt/sources.list.d/bazel.list && apt-get update && apt-get install -y locales libglib2.0-dev libsm6 libxrender1 libxext6
+
+RUN rm -f /etc/localtime && cp -f /opt/localtime /etc && rm /opt/localtime
+RUN pip install seldon-core==1.1.0 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+RUN pip install -r /opt/requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+RUN cd /opt && chmod a+x startPredict.sh
+
+ENV PREDICTIVE_UNIT_SERVICE_PORT 8866
+
+CMD ["/opt/startPredict.sh"]
+```
+
+4. 修改processor.py中preprocess方法
+
+```python
+def preprocess(data, **kwargs):
+    if isinstance(data, np.ndarray):
+        data = torch.from_numpy(data).float()
+    return data
+```
+
+5. 创建镜像，命令：
+   docker build -t pytorch-online:lastest .
+
+6. 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
+   docker run -itd -p 8866:8866 pytorch-online:lastest
+
+7. -p 8866:8866 grpc端口

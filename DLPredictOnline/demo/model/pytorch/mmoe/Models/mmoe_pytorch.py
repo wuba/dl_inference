@@ -1,71 +1,54 @@
-'''
-MMoE model
-'''
+# -*- coding: utf-8 -*-
+# @Time:        2021/7/25
+# @Author:      sunchangsheng
+# @Contact:     sunchangsheng@58.com
+# @FileName:    mmoe_pytorch.py
+# @Software:    PyCharm
 
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
 import time
 
-class FocalLoss(nn.Module):
-    def __init__(self, alpha=1, gamma=2, logits=False, reduction=True):
-        super(FocalLoss, self).__init__()
-        self.alpha = alpha
-        self.gamma = gamma
-        self.logits = logits
-        self.reduction = reduction
-
-    def forward(self, inputs, targets):
-        if self.logits:
-            BCE_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction='none')
-        else:
-            BCE_loss = F.binary_cross_entropy(inputs, targets, reduction='none')
-        pt = torch.exp(-BCE_loss)
-        F_loss = self.alpha * (1-pt)**self.gamma * BCE_loss
-
-        if self.reduction:
-            return torch.mean(F_loss)
-        else:
-            return F_loss
-
 class Config(object):
     def __init__(self,data_dir):
         self.data_path = data_dir + 'train.txt'
         self.test_path = data_dir + 'test.txt'
-        self.test_label_path = data_dir + 'true_labels.txt'
+        self.test_label_path = data_dir + 'newtruelabels.txt'
 
-        self.model_name = 'mmoe_pytorch_ai'
+        self.model_name = 'mmoe_pytorch'
         self.save_path = '/workspace/model/' + self.model_name + '.ckpt'
         self.require_improvement = 1000
-        self.learning_rate = 1e-2
+        self.learning_rate = 5e-3
         self.label_columns = ['click', 'resume']
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         self.label_dict = [1,1]
-        self.num_feature = 0
-        self.num_experts = 4
+        self.num_feature = 138
+        self.num_experts = 6
         self.num_tasks = 2
-        self.units= 32
-        self.hidden_units= 4
+        self.units= 16
+        self.hidden_units= 8
 
+        self.embed_size = 64
         self.batch_size = 20480
-        self.expert_hidden = 128
+        self.expert_hidden = 32
+        self.field_size = 0
+
         self.num_epochs = 1000
-        self.loss_fn = FocalLoss()
+        self.loss_fn = F.binary_cross_entropy
 
 class Expert(nn.Module):
     def __init__(self, input_size, output_size, hidden_size):
         super(Expert, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, output_size)
-        self.relu1 = nn.ReLU()
-        self.relu2 = nn.ReLU()
+        self.relu = nn.ReLU()
 
     def forward(self, x):
         x = self.fc1(x)
-        x = self.relu1(x)
-        x = self.fc2(x)
-        y = self.relu2(x)
+        x = self.relu(x)
+        y = self.fc2(x)
         return y
 
 class Gate(nn.Module):
@@ -121,3 +104,6 @@ class Model(torch.nn.Module):
         final_output = [t(ti) for t, ti in zip(self.towers, towers_input)]
 
         return final_output
+
+
+

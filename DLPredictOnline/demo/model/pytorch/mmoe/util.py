@@ -162,49 +162,6 @@ class Dataiterater(object):
         else:
             return self.n_batches
 
-class Dataiterater_gauc(object):
-    def __init__(self,batches,batch_size,device):
-        self.batch_size = batch_size
-        self.batches = batches
-        self.n_batches = len(batches) // batch_size
-
-        self.residue =False
-        if len(batches)%batch_size != 0:
-            self.residue = True
-        self.index = 0
-        self.device = device
-    def _to_n_tensor(self, datas):
-        id = torch.IntTensor([_[0] for _ in datas]).to(self.device)
-        x = torch.FloatTensor([_[1] for _ in datas]).to(self.device)
-        y1 = torch.FloatTensor([_[2] for _ in datas]).to(self.device)
-        y2 = torch.FloatTensor([_[3] for _ in datas]).to(self.device)
-        return id,x, (y1,y2)
-
-    def __next__(self):
-        if self.residue and self.index == self.n_batches:
-            batches = self.batches[self.index * self.batch_size: len(self.batches)]
-            self.index += 1
-            batches = self._to_n_tensor(batches)
-
-            return batches
-
-        elif self.index >= self.n_batches:
-            self.index = 0
-            raise StopIteration
-        else:
-            batches = self.batches[self.index * self.batch_size: (self.index + 1) * self.batch_size]
-            self.index += 1
-            batches = self._to_n_tensor(batches)
-            return batches
-
-    def __iter__(self):
-        return self
-
-    def __len__(self):
-        if self.residue:
-            return self.n_batches + 1
-        else:
-            return self.n_batches
 
 def build_iterator(dataset, config):
     iter = Dataiterater(dataset, config.batch_size, config.device)

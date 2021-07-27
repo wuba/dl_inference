@@ -10,7 +10,7 @@ from process import train_step
 import pandas as pd
 
 if __name__ == '__main__':
-    model_name = 'mmoe_pytorch_ai'
+    model_name = 'mmoe_pytorch'
     x = import_module('Models.'+model_name)
     config = x.Config('/workspace/mdata/')
     np.random.seed(1)
@@ -29,12 +29,12 @@ if __name__ == '__main__':
     train_step(config,model,train_iter,dev_iter,test_iter)
 
     test_data = generate_test_set(config)
+
     model.load_state_dict(torch.load(config.save_path))
     model.eval()
     test_predict = model(torch.Tensor(test_data).to(config.device))
-    print(test_predict)
-
     ctr_pred, cvr_pred = test_predict
+
     ctr_pred = ctr_pred.cpu().detach().numpy()
     cvr_pred = cvr_pred.cpu().detach().numpy()
 
