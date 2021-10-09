@@ -16,8 +16,9 @@
 
 package com.bj58.ailab.demo.client;
 
-import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
 import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
+import com.bj58.ailab.dlpredictonline.grpc.consts.Common;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.PredictionProtos;
 import com.google.protobuf.Value;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +97,7 @@ public class PyTorchMmoe {
 
         Map<String, Value> tagsMap = new HashMap<>(1);
         Value taskId = Value.newBuilder().setNumberValue(39).build();
-        tagsMap.put("taskid", taskId);
+        tagsMap.put(Common.TASK_ID_KEY, taskId);
 
         PredictionProtos.Meta meta = PredictionProtos.Meta.newBuilder().putAllTags(tagsMap).build();
 

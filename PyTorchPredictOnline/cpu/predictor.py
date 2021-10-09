@@ -19,6 +19,7 @@ import os
 import torch
 import numpy as np
 import traceback
+from types import FunctionType
 from processor import *
 
 
@@ -37,7 +38,7 @@ class predictor:
             x = preprocess(x, **kwargs)
             run_exists = ('run_model' in locals() or 'run_model' in globals()) and isinstance(run_model, FunctionType)
             if run_exists:
-                result = run_model(model, x, **kwargs)
+                result = run_model(self.model, x, **kwargs)
             elif "tags" in kwargs["meta"] and len(kwargs["meta"]["tags"]) > 1:
                 y = x.to(self.device)
                 result = self.model(y, **(kwargs["meta"]["tags"]))

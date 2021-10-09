@@ -17,12 +17,15 @@
 
 package com.bj58.ailab.dlpredictonline.components;
 
-import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.PredictionProtos;
 import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
 import com.bj58.ailab.dlpredictonline.init.WpaiPredictOnlineInit;
 import com.bj58.ailab.dlpredictonline.pytorchonline.PytorchOnlineService;
 import com.bj58.ailab.dlpredictonline.tensorflowserving.TensorflowServingService;
 import com.bj58.ailab.dlpredictonline.config.Configurations;
+import com.bj58.ailab.dlpredictonline.grpc.tis.GrpcService;
+import com.bj58.ailab.dlpredictonline.tisonline.TisOnlineService;
+import com.bj58.ailab.dlpredictonline.util.CommonUtils;
 import com.google.protobuf.Value;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -33,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import tensorflow.serving.Predict;
 
 import java.io.IOException;
+
+import static com.bj58.ailab.dlpredictonline.grpc.consts.Common.TASK_ID_KEY;
 
 /**
  * @Description GRPC服务端
@@ -107,8 +112,7 @@ public class WPAIDLPredictOnlineGRPCService {
             try {
                 long start = System.currentTimeMillis();
                 String modelName = predictRequest.getModelSpec().getName();
-                String[] modelNames = modelName.split("-");
-                int taskId = Integer.parseInt(modelNames[modelNames.length - 1]);
+                int taskId = CommonUtils.extractTaskIdFromModelName(modelName);
                 Predict.PredictResponse predictResponse = TensorflowServingService
                     .predict(taskId, predictRequest);
                 responseObserver.onNext(predictResponse);
@@ -126,13 +130,13 @@ public class WPAIDLPredictOnlineGRPCService {
             try {
                 long start = System.currentTimeMillis();
                 Map<String, Value> tagsMap = request.getMeta().getTagsMap();
-                String taskIdKey = "taskid";
-                if (!tagsMap.containsKey(taskIdKey)) {
+                if (!tagsMap.containsKey(TASK_ID_KEY)) {
                     responseObserver.onNext(null);
                     responseObserver.onCompleted();
+                    logger.error("request meta does not contain field {}", TASK_ID_KEY);
                     return;
                 }
-                Value taskIdValue = tagsMap.get(taskIdKey);
+                Value taskIdValue = tagsMap.get(TASK_ID_KEY);
                 int taskId = (int) taskIdValue.getNumberValue();
                 PredictionProtos.SeldonMessage response = PytorchOnlineService
                     .predict(taskId, request);
@@ -152,13 +156,13 @@ public class WPAIDLPredictOnlineGRPCService {
             try {
                 long start = System.currentTimeMillis();
                 Map<String, Value> tagsMap = request.getMeta().getTagsMap();
-                String taskIdKey = "taskid";
-                if (!tagsMap.containsKey(taskIdKey)) {
+                if (!tagsMap.containsKey(TASK_ID_KEY)) {
                     responseObserver.onNext(null);
                     responseObserver.onCompleted();
+                    logger.error("request meta does not contain field {}", TASK_ID_KEY);
                     return;
                 }
-                Value taskIdValue = tagsMap.get(taskIdKey);
+                Value taskIdValue = tagsMap.get(TASK_ID_KEY);
                 int taskId = (int) taskIdValue.getNumberValue();
                 PredictionProtos.SeldonMessage response = PytorchOnlineService
                     .predict(taskId, request);
@@ -170,7 +174,24 @@ public class WPAIDLPredictOnlineGRPCService {
                 logger.error("caffePredict error, msg={}", e.getMessage());
             }
         }
-    }
 
+        @Override
+        public void tisPredict(GrpcService.ModelInferRequest request,
+                               StreamObserver<GrpcService.ModelInferResponse> responseObserver) {
+            try {
+                long start = System.currentTimeMillis();
+                String modelName = request.getModelName();
+                int taskId = CommonUtils.extractTaskIdFromModelName(modelName);
+                GrpcService.ModelInferResponse response = TisOnlineService
+                    .predict(taskId, request);
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+                int spend = (int) (System.currentTimeMillis() - start);
+                logger.info("predict taskId={} predict spend {} ms", taskId, spend);
+            }catch (Exception e){
+                logger.error("predict error, msg={}", e.getMessage());
+            }
+        }
+    }
 
 }

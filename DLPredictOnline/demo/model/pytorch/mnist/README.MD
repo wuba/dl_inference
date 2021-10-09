@@ -1,6 +1,6 @@
 # Mnist模型示例
 
-client程序 [PyTorchClient](../../../src/main/java/com/bj58/ailab/demo/client/PyTorchClient.java)  
+client程序 [PyTorchClient](../../../src/main/java/com/bj58/ailab/demo/client/PyTorchMnist.java)  
 
 ## 数据
 [test_data](./test_data) 样本数据 

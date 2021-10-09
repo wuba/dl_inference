@@ -28,6 +28,7 @@ import io.grpc.netty.NettyChannelBuilder;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,8 @@ public class TensorflowServingBlockingStub {
     private final static String KEY_IP_SPLIT = ",";
     private final static String KEY_IP_PORT_SPLIT = ":";
 
+    private final static int linesLength = 2;
+
     public static void init() throws Exception{
         String nodeFile = System.getProperty("user.dir") + File.separator + "config/nodefile.txt";
         nodeFile = Configurations.getProperty("predict.online.node.file", nodeFile, false);
@@ -79,9 +82,14 @@ public class TensorflowServingBlockingStub {
                         }
                         updateByLine(line);
                     }
-                    reader.close();
                 } catch (Exception e){
                     logger.error("read file error, msg=" + e.getMessage());
+                }finally {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -103,7 +111,7 @@ public class TensorflowServingBlockingStub {
             return;
         }
         String[] lines = line.split(KEY_SPLIT);
-        int linesLength = 2;
+
         if (lines.length > linesLength){
             return;
         }

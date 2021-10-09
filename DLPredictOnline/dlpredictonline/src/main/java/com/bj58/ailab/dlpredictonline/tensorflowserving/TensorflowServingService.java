@@ -78,6 +78,7 @@ public class TensorflowServingService {
                 e.printStackTrace(pw);
                 logger.error("ip={}, taskid={}, predict request tensorflow-serving error, msg={}, exception={}",
                     MachineUtil.getHostIp(), taskId, e.getMessage(), sw.toString());
+                pw.close();
 
             }
         }

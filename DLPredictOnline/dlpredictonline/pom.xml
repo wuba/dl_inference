@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.bj58.ailab</groupId>
     <artifactId>wpaidlpredictonline</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,6 @@
   <properties>
     <project.builder.sourcesEncoding>UTF-8</project.builder.sourcesEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <!-- 编译时的编码 -->
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
   </properties>
 
@@ -29,32 +28,6 @@
           <encoding>utf-8</encoding>
         </configuration>
       </plugin>
-      <!-- 由于使用grpc还需要用到protobuf生成的Java代码，如果通过命令生成再拷贝jar文件不好管理，可以使用maven插件，把proto文件拷贝到指定目录，在编译时就会自动生成java文件放到target目录 -->
-      <!-- 注意我们需要加入TensorFlow serving和TensorFlow项目的proto文件，由于我们不使用bazel编译，因此proto文件的依赖路径需要修改，建议参考上面的完整项目 -->
-      <!-- 参考:http://docs.api.xiaomi.com/cloud-ml/modelservice/use_java_client.html -->
-      <!-- 第一次生成服务接口有效 -->
-      <!--<plugin>-->
-        <!--<groupId>org.xolstice.maven.plugins</groupId>-->
-        <!--<artifactId>protobuf-maven-plugin</artifactId>-->
-        <!--<version>0.5.0</version>-->
-        <!--<configuration>-->
-          <!--&lt;!&ndash; The version of protoc must match protobuf-java. If you don't depend-->
-          <!--on protobuf-java directly, you will be transitively depending on the protobuf-java-->
-          <!--version that grpc depends on. &ndash;&gt;-->
-          <!--<protocArtifact>com.google.protobuf:protoc:3.0.0:exe:${os.detected.classifier}</protocArtifact>-->
-          <!--<pluginId>grpc-java</pluginId>-->
-          <!--<pluginArtifact>io.grpc:protoc-gen-grpc-java:1.0.0:exe:${os.detected.classifier}</pluginArtifact>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<goals>-->
-              <!--<goal>compile</goal>-->
-              <!--<goal>compile-custom</goal>-->
-            <!--</goals>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
-      <!--依赖包都拷贝到 target/lib 目录, 方便部署到服务器-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -88,62 +61,32 @@
   </build>
 
   <dependencies>
-    <!-- quick start 包 -->
+    <dependency>
+      <groupId>com.bj58.ailab</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- GRPC client -->
-    <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-netty</artifactId>
-      <version>1.17.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-protobuf</artifactId>
-      <version>1.17.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-stub</artifactId>
-      <version>1.17.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.yesup.oss</groupId>
-      <artifactId>tensorflow-client</artifactId>
-      <version>1.4-1</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
       <version>2.3</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>2.3</version>
-    </dependency>
-
-    <!-- fastjson -->
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>fastjson</artifactId>
-      <version>1.2.53</version>
     </dependency>
   </dependencies>
 </project>

@@ -5,11 +5,11 @@
 ```$xslt
 打包文件：dlpredictonline-0.0.1-SNAPSHOT.jar
 依赖包(maven install之后target/lib目录)：libs
-配置文件：参数配置，config/config.properties, 
-         推理节点信息配置，config/nodefile.txt
+配置文件：参数配置，src/main/resource/config.properties, 
+         推理节点信息配置，src/main/resource/nodefile.txt
 ```
 ### 运行环境
-java > 1.8
+java >= 1.8
 ### 服务启动
 入口：WPAIDLPredictOnlineGRPCService  
 参数：port，服务启动端口  
@@ -26,7 +26,7 @@ libs=dlpredictonline-0.0.1-SNAPSHOT.jar:$libs
 java -classpath $libs com.bj58.ailab.dlpredictonline.components.WPAIDLPredictOnlineGRPCService 50050
 ```
 ### 配置文件说明
-resources/config.properties 参数配置，示例如下所示：
+resources/config.properties参数配置，示例如下所示：
 ```properties
 ## GRPC连接最大包大小
 predict.grpc.maxMessageSize=10485760

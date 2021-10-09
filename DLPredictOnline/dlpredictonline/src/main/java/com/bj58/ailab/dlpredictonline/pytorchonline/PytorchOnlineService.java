@@ -19,9 +19,9 @@ package com.bj58.ailab.dlpredictonline.pytorchonline;
 
 import com.bj58.ailab.dlpredictonline.config.Config;
 import com.bj58.ailab.dlpredictonline.entity.BlockingStubEntity;
-import com.bj58.ailab.dlpredictonline.entity.PredictionProtos.SeldonMessage;
-import com.bj58.ailab.dlpredictonline.pytorchonline.grpc.ModelGrpc;
-import com.bj58.ailab.dlpredictonline.pytorchonline.grpc.ModelGrpc.ModelBlockingStub;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.PredictionProtos.SeldonMessage;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.ModelGrpc;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.ModelGrpc.ModelBlockingStub;
 import com.bj58.ailab.dlpredictonline.tensorflowserving.TensorflowServingBlockingStub;
 import com.bj58.ailab.dlpredictonline.util.MachineUtil;
 import io.grpc.ManagedChannel;
@@ -72,6 +72,7 @@ public class PytorchOnlineService {
                 e.printStackTrace(pw);
                 logger.error("ip={}, taskid={}, predict request pytorch-online error, msg={}, exception={}",
                         MachineUtil.getHostIp(), taskId, e.getMessage(), sw.toString().replaceAll("\n", " "));
+                pw.close();
             }
         }
         return null;

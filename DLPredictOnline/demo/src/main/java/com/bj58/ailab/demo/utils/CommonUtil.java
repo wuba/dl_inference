@@ -33,4 +33,36 @@ public class CommonUtil {
     public static boolean checkSystemIsWin(){
         return System.getProperty(OS_NAME_KEY).toLowerCase().contains(WIN_KEY);
     }
+
+    /**
+     * 字节数组转float
+     * @param b
+     * @param index
+     * @return
+     */
+    public static float byte2float(byte[] b, int index) {
+        int ret = byte2int(b, index);
+        return Float.intBitsToFloat(ret);
+    }
+
+    /**
+     * 字节数组转int整数
+     * @param b
+     * @param index
+     * @return
+     */
+    public static int byte2int(byte[] b, int index) {
+        if (b == null || b.length <= index + 3){
+            throw new IllegalStateException("byte2int exception");
+        }
+        int l;
+        l = b[index + 0];
+        l &= 0xff;
+        l |= ((long) b[index + 1] << 8);
+        l &= 0xffff;
+        l |= ((long) b[index + 2] << 16);
+        l &= 0xffffff;
+        l |= ((long) b[index + 3] << 24);
+        return l;
+    }
 }

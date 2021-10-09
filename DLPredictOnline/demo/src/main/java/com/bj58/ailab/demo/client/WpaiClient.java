@@ -19,7 +19,8 @@ package com.bj58.ailab.demo.client;
 
 import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.NettyChannelBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,7 +67,7 @@ public class WpaiClient {
     }
 
     public WpaiClient(String host, int port) {
-        this(ManagedChannelBuilder.forAddress(host, port)
+        this(NettyChannelBuilder.forAddress(host, port)
             .usePlaintext()
             .maxInboundMessageSize(10485760)
             .build());
@@ -79,9 +80,13 @@ public class WpaiClient {
         async = WpaiDLPredictOnlineServiceGrpc.newStub(channel);
     }
 
-    public void greet(String name) {
-//        TensorflowDssm.tensorflowClient(blockingStub);
-        TensorflowWideAndDeep.tensorflowClient(blockingStub);
+    public void greet(String name){
+        try {
+            PyTorchMmoe.client(blockingStub);
+        }catch (Exception e){
+
+        }
+
     }
 
     public void shutdown() throws InterruptedException {

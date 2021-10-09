@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.bj58.ailab</groupId>
     <artifactId>wpaidlpredictonline</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -25,8 +25,13 @@
   <dependencies>
     <dependency>
       <groupId>com.bj58.ailab</groupId>
-      <artifactId>dlpredictonline</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <artifactId>common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.bj58.ailab</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

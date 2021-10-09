@@ -7,7 +7,7 @@ client程序 [TensorflowSptm](../../../src/main/java/com/bj58/ailab/demo/client/
 预训练LSTM来源于[qa_match项目](https://github.com/wuba/qa_match/tree/master/sptm)  
 
 ## 数据
-[test.txt](./test.txt) 样本文件  
+[test.txt](./test_data) 样本文件  
 [vocab](./vocab) 词典  
 
 ## 模型文件

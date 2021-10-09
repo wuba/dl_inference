@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 
 public class TensorflowWideAndDeep {
 
+    private static final String TEST_DATA = "DLPredictOnline/demo/model/tensorflow/wideAndDeep/census_input.csv";
+
     private static final String MODEL_NAME = "wideAndDeep-2390";
     private static final String INPUT_NAME = "inputs";
     private static final String OUTPUT_NAME = "scores";
@@ -155,9 +157,9 @@ public class TensorflowWideAndDeep {
     }
 
     public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
-        String dataFile = "census_input.csv";
+        String dataFile = TEST_DATA;
         if (CommonUtil.checkSystemIsWin()){
-            dataFile = "demo\\model\\tensorflow\\wideAndDeep\\census_input.csv";
+            dataFile = dataFile.replaceAll("/", "\\\\");
         }
         TensorflowWideAndDeep tensorflowWideAndDeep = new TensorflowWideAndDeep();
         List<String> dataList = null;

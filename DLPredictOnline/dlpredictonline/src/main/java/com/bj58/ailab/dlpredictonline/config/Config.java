@@ -31,4 +31,8 @@ public class Config {
      * 异常重试次数
      */
     public static final int DEFAULT_RETRY_NUM = 2;
+    /**
+     * 模型名称分割线 e.g  tensorflow-666
+     */
+    public static final String SEPARATOR_LINE = "-";
 }
