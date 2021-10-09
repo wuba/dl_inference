@@ -4,11 +4,12 @@
 
 	<groupId>com.bj58.ailab</groupId>
 	<artifactId>wpaidlpredictonline</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<modules>
 		<module>demo</module>
 		<module>dlpredictonline</module>
-	</modules>
+    <module>common</module>
+  </modules>
 	<packaging>pom</packaging>
 
 	<url>http://maven.apache.org</url>

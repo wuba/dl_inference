@@ -17,6 +17,8 @@
 
 package com.bj58.ailab.dlpredictonline.util;
 
+import com.bj58.ailab.dlpredictonline.config.Config;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,5 +36,16 @@ public class CommonUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 从模型名称提取任务ID
+     * @param modelName
+     * @return
+     */
+    public static int extractTaskIdFromModelName(String modelName){
+        String[] modelNames = modelName.split(Config.SEPARATOR_LINE);
+        int taskId = Integer.parseInt(modelNames[modelNames.length - 1]);
+        return taskId;
     }
 }

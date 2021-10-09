@@ -41,13 +41,14 @@ public class TensorflowSptm {
     /**
      * 数据文件
      */
-    public static String DATA_FILE_NAME = "test.txt";
+    private static final String TEST_DATA = "DLPredictOnline/demo/model/tensorflow/sptm/test_data";
     /**
      * 词典文件
      */
-    private static String VOCAB_FILE_NAME = "vocab";
+    private static final String VOCAB_FILE = "DLPredictOnline/demo/model/tensorflow/sptm/vocab";
     private static final String OUTPUTS_KEY_OUTPUT = "labels";
     private static final String OUTPUTS_KEY_SCORE = "probs";
+
     /**
      * 加载完成的词典
      */
@@ -67,13 +68,9 @@ public class TensorflowSptm {
     private int inputShape1 = MAX_LEN;
     private int batchShape = 1;
 
-    public TensorflowSptm() {
-        if (CommonUtil.checkSystemIsWin()){
-            DATA_FILE_NAME = "demo\\model\\tensorflow\\sptm\\test.txt";
-            VOCAB_FILE_NAME = "demo\\model\\tensorflow\\sptm\\vocab";
-        }
+    public TensorflowSptm(String vocabFile) {
         try {
-            vocab = loadVocab(VOCAB_FILE_NAME);
+            vocab = loadVocab(vocabFile);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -282,10 +279,16 @@ public class TensorflowSptm {
     }
 
     public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
-        TensorflowSptm tensorflowSptm = new TensorflowSptm();
+        String testFile = TEST_DATA;
+        String vocabFile = VOCAB_FILE;
+        if (CommonUtil.checkSystemIsWin()){
+            testFile.replaceAll("/","\\\\");
+            vocabFile.replaceAll("/", "\\\\");
+        }
+        TensorflowSptm tensorflowSptm = new TensorflowSptm(vocabFile);
         List<String> sentences = null;
         try {
-            sentences = tensorflowSptm.loadSentences(DATA_FILE_NAME);
+            sentences = tensorflowSptm.loadSentences(testFile);
         } catch (Exception e) {
             System.err.println("load sentence error, msg=" + e.getMessage());
             return;

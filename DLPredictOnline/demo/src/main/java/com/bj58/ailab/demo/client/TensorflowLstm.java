@@ -42,6 +42,10 @@ public class TensorflowLstm {
 
     private static final String OUT_PUT_KEY = "output";
 
+    private static final String TEST_DATA = "DLPredictOnline/demo/model/tensorflow/lstm/test_data";
+
+    private static final String VOCAB_MAX_FILE = "DLPredictOnline/demo/model/tensorflow/lstm/vocab_max";
+
     public PredictRequest getRequest(ArrayList<Integer> testDataArrayList){
         String modelname = "lstm-maxclass-2365";
         Model.ModelSpec.Builder modelTensorBuilder = Model.ModelSpec.newBuilder().setName(modelname);
@@ -137,11 +141,11 @@ public class TensorflowLstm {
 
     public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
 
-        String testFile = "test_data";
-        String vocabMaxFile = "vocab_max";
+        String testFile = TEST_DATA;
+        String vocabMaxFile = VOCAB_MAX_FILE;
         if (CommonUtil.checkSystemIsWin()){
-            testFile = "demo\\model\\tensorflow\\lstm\\test_data";
-            vocabMaxFile = "demo\\model\\tensorflow\\lstm\\vocab_max";
+            testFile = testFile.replaceAll("/", "\\\\");
+            vocabMaxFile = vocabMaxFile.replaceAll("/", "\\\\");
         }
         int maxLen = 40;
         TensorflowLstm tensorflowLstm = new TensorflowLstm();

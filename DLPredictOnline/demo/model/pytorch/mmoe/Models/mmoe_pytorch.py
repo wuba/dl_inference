@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Time:        2021/7/25
 # @Author:      sunchangsheng
-# @Contact:     sunchangsheng@58.com
 # @FileName:    mmoe_pytorch.py
 # @Software:    PyCharm
 

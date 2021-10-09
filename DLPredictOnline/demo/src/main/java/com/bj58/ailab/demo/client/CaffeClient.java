@@ -17,16 +17,23 @@
 
 package com.bj58.ailab.demo.client;
 
-import com.bj58.ailab.dlpredictonline.entity.PredictionProtos;
+import com.bj58.ailab.demo.utils.CommonUtil;
 import com.bj58.ailab.dlpredictonline.grpc.WpaiDLPredictOnlineServiceGrpc;
+import com.bj58.ailab.dlpredictonline.grpc.pytorch.PredictionProtos;
 import sun.misc.BASE64Encoder;
 import com.google.protobuf.Value;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static com.bj58.ailab.demo.utils.FileUtil.readImageFile;
+import static com.bj58.ailab.dlpredictonline.grpc.consts.Common.TASK_ID_KEY;
 
 /**
  * Caffe 房屋图像分类模型示例
@@ -35,34 +42,16 @@ import java.util.concurrent.TimeUnit;
  **/
 public class CaffeClient {
 
-    /**
-     * 读取文件
-     */
-    public static byte[] readFile(String file) throws Exception {
-        byte[] data;
-        InputStream in = null;
-        try {
-            in = new FileInputStream(file);
-            data = new byte[in.available()];
-            in.read(data);
-        } finally {
-            in.close();
-        }
-        return data;
-    }
+    private static final String TEST_DATA = "DLPredictOnline/demo/model/caffe/test_data";
 
-    public PredictionProtos.SeldonMessage getRequest() {
+    public PredictionProtos.SeldonMessage getRequest(File file) {
 
-        String picPath = "demo/src/main/resources/data";
-
-        // 测试图片放入数据list
-        File file = new File(picPath);
         File[] files = file.listFiles();
         List<Object> dataList = new ArrayList<Object>();
         for (File f : files) {
             if(f.getName().endsWith(".jpg")) {
                 try {
-                    byte[] src = readFile(f.getAbsolutePath());
+                    byte[] src = readImageFile(f);
                     BASE64Encoder encoder = new BASE64Encoder();
                     dataList.add(encoder.encode(src));
                 } catch (Exception e){
@@ -75,7 +64,7 @@ public class CaffeClient {
 
         Map<String, Value> tagsMap = new HashMap<>(1);
         Value taskId = Value.newBuilder().setNumberValue(89).build();
-        tagsMap.put("taskid", taskId);
+        tagsMap.put(TASK_ID_KEY, taskId);
 
         PredictionProtos.Meta meta = PredictionProtos.Meta.newBuilder().putAllTags(tagsMap).build();
         PredictionProtos.SeldonMessage request = PredictionProtos.SeldonMessage
@@ -97,8 +86,13 @@ public class CaffeClient {
     }
 
     public static void client(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub) {
+        String imagePath = TEST_DATA;
+        if (CommonUtil.checkSystemIsWin()){
+            imagePath = imagePath.replaceAll("/","\\\\");
+        }
+        File dataDir = new File(imagePath);
         CaffeClient caffeClient = new CaffeClient();
-        PredictionProtos.SeldonMessage request = caffeClient.getRequest();
+        PredictionProtos.SeldonMessage request = caffeClient.getRequest(dataDir);
         PredictionProtos.SeldonMessage response = blockingStub.withDeadlineAfter(10000, TimeUnit.MILLISECONDS).caffePredict(request);
         caffeClient.printResult(response);
     }

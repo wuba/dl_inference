@@ -26,6 +26,7 @@ import tensorflow.serving.Predict.PredictRequest;
 import tensorflow.serving.Predict.PredictResponse;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +42,10 @@ import java.util.Map;
 public class TensorflowDssm {
 
     private static final String OUT_PUTS_KEY = "probs";
+
+    private static final String TEST_DATA = "DLPredictOnline/demo/model/tensorflow/dssm/test_data";
+
+    private static final String VOCAB_MIN_FILE = "DLPredictOnline/demo/model/tensorflow/dssm/vocab_min";
 
     public PredictRequest getRequest(ArrayList<Integer> testDataArrayList){
         //在线预测任务对应的模型名称
@@ -140,11 +145,11 @@ public class TensorflowDssm {
 
     public static void tensorflowClient(WpaiDLPredictOnlineServiceGrpc.WpaiDLPredictOnlineServiceBlockingStub blockingStub){
 
-        String testFile = "test_data";
-        String vocabMinFile = "vocab_min";
+        String testFile = TEST_DATA;
+        String vocabMinFile = VOCAB_MIN_FILE;
         if (CommonUtil.checkSystemIsWin()){
-            testFile = "demo\\model\\tensorflow\\dssm\\test_data";
-            vocabMinFile = "demo\\model\\tensorflow\\dssm\\vocab_min";
+            testFile.replaceAll("/", "\\\\");
+            vocabMinFile.replaceAll("/", "\\\\");
         }
 
         int maxLen = 40;

@@ -129,6 +129,62 @@ key=__label__offer, value=1.6348207E-5
 key=__label__thankyou, value=1.5074686E-5
 ```
 
+
+### 或通过MKL优化tensorflow模型并部署
+
+Intel数学核心函数库（Math Kernel Library,下文简称MKL）是一套高度优化、线程安全的数学例程、函数，面向高性能的工程、科学与财务应用。针对图像类模型有很大的性能提升，下面以resnet50为例介绍MKL的部署使用。
+
+MKL和普通的Tensorflow模型部署步骤一致，但是使用的容器不同，推荐使用官方镜像：intel/intel-optimized-tensorflow-serving:2.3.0-mkl
+
+如下：
+1. 下载[待部署的Tensorflow模型文件](model/tensorflow/resnet50)到本地/model/textcnn  
+   模型路径：TESTDATA=/model/resnet50-345
+2. 运行容器，启动tensorflow-serving，绑定到宿主机8501端口上，命令：
+   docker run -t --rm -p 8501:8501 -p 8500:8500  --cpus=4  -v "$TESTDATA:/models/resnet50-345" -e MODEL_NAME=resnet50-345 intel/intel-optimized-tensorflow-serving:2.3.0-mkl &
+3. -e MODEL_NAME=resnet50-345 表示模型名称，其中69表示此次测试的任务id，由用户自己指定
+4. -v /models/resnet50-345 容器内部目录必须符合/models/$MODEL_NAME 规范
+5. -p 8501:8501 http端口 表示将宿主机端口8051绑定到容器8051端口上，这样可以通过物理机8051端口可以直接访问容器中服务
+6. -p 8500:8500 grpc端口
+
+### MKL运行客户端
+可直接在IDEA上运行[client](src/main/java/com/bj58/ailab/demo/client/WpaiClient.java)，传入服务部署ip port即可  
+参考 [TensorflowResnet50实现](src/main/java/com/bj58/ailab/demo/client/TensorflowResnet50.java)
+结果如下所示(共1000条)：
+```
+9.372997E-5
+9.171074E-5
+4.7903252E-4
+...
+1.7110308E-4
+1.2619491E-4
+7.5576117E-4
+```
+
+### MKL性能提升对比，以resnet50为例
+使用开源的resnet50模型进行部署时，分配4核cpu，使用MKL优化后的Tensorflow serving的QPS提升约70%。
+
+![mkl_compara.png](mkl_compara.png)
+
+### MKL参数优化
+MKL可以根据需要进行参数调整，通常不需要调整，调整时直接添加在docker启动的环境变量中即可，如
+docker run ... -e KMP_BLOCKTIME=1 -e KMP_SETTINGS=1 -e  OMP_NUM_THREADS=1 ...
+
+详细参数可以参考容器启动日志，下图以OMP_NUM_THREADS为例进行调整的性能变化：
+![mkl_config.png](mkl_config.png)
+
+```
+参数说明
+KMP_BLOCKTIME - 设置线程在执行完并行区域之后，在休眠之前应该等待的时间（以毫秒为单位）
+KMP_AFFINITY - 使运行时库能够将线程绑定到物理处理单元
+KMP_SETTINGS - 允许 (true) 或禁止 (false) 在程序执行期间输出 OpenMP* 运行时库环境变量
+OMP_NUM_THREADS - 指定要使用的线程数
+```
+
+通过两种Tensorflow serving进行部署后，总体调度流程如下：
+
+![process.png](process.png)
+
+
 ## PyTorch Demo
 ### PyTorch-Mnist部署
 
@@ -140,16 +196,16 @@ PyTorch模型部署步骤如下：
 2. 创建镜像，命令：
    docker build -t pytorch-online:lastest .
 3. 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
-   docker run -dt -p 8866:8866 pytorch-online:lastest &
+   docker run -itd -p 8866:8866 pytorch-online:lastest
 4. -p 8866:8866 grpc端口
 
 ### MMoE模型部署
 
-1. 下载待部署的[MMoE模型文件](model/pytorch/mmoe/model.pth),[Models](model/pytorch/mmoe/Models),[startPredict.sh](../../PyTorchPredictOnline/startPredict.sh), [cpu/predictor.py](../../PyTorchPredictOnline/cpu/predictor.py),[cpu/processor.py](../../PyTorchPredictOnline/cpu/processor.py),[localtime](../../PyTorchPredictOnline/DockerImages/deps/localtime)到本地/model/deps
+1、 下载待部署的[MMoE模型文件](model/pytorch/mmoe/model.pth),[Models](model/pytorch/mmoe/Models),[startPredict.sh](../../PyTorchPredictOnline/startPredict.sh), [cpu/predictor.py](../../PyTorchPredictOnline/cpu/predictor.py),[cpu/processor.py](../../PyTorchPredictOnline/cpu/processor.py),[localtime](../../PyTorchPredictOnline/DockerImages/deps/localtime)到本地/model/deps
 
-2. 下载[Dockerfile_cpu](../../PyTorchPredictOnline/DockerImages/Dockerfile_cpu)到本地/model,并重命名为Dockerfile
+2、 下载[Dockerfile_cpu](../../PyTorchPredictOnline/DockerImages/Dockerfile_cpu)到本地/model,并重命名为Dockerfile
 
-3. 修改Dockerfile文件内容，更新镜像版本为1.8
+3、 修改Dockerfile文件内容，更新镜像版本为1.8
 
 ```dockerfile
 FROM floydhub/pytorch:1.8.0-py3.58
@@ -168,7 +224,7 @@ ENV PREDICTIVE_UNIT_SERVICE_PORT 8866
 CMD ["/opt/startPredict.sh"]
 ```
 
-4. 修改processor.py中preprocess方法
+4、 修改processor.py中preprocess方法
 
 ```python
 def preprocess(data, **kwargs):
@@ -177,10 +233,10 @@ def preprocess(data, **kwargs):
     return data
 ```
 
-5. 创建镜像，命令：
+5、 创建镜像，命令：
    docker build -t pytorch-online:lastest .
 
-6. 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
+6、 运行容器，启动pytorch-online，绑定到宿主机8866端口上，命令：
    docker run -itd -p 8866:8866 pytorch-online:lastest
 
-7. -p 8866:8866 grpc端口
+7、 -p 8866:8866 grpc端口
