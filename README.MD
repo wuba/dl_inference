@@ -1,7 +1,7 @@
-# 通用深度学习推理服务
+# 通用深度学习推理工具
 可在生产环境中快速上线由TensorFlow、PyTorch、Caffe框架训练出的深度学习模型，以及被[TensorRT](https://developer.nvidia.com/tensorrt) 优化过的模型。
   
-dl_inference是58同城推出的通用深度学习推理服务，使用dl_inference只需要将模型文件放在指定目录然后启动服务就可以进行推理请求调用。dl_inference当前支持TensorFlow、PyTorch和Caffe模型，提供GPU和CPU两种部署方式，并且实现了模型多节点部署时的负载均衡策略，支持线上海量推理请求。    
+dl_inference是58同城推出的通用深度学习推理工具，使用dl_inference只需要将模型文件放在指定目录然后启动服务就可以进行推理请求调用。dl_inference当前支持TensorFlow、PyTorch和Caffe模型，提供GPU和CPU两种部署方式，并且实现了模型多节点部署时的负载均衡策略，支持线上海量推理请求。    
 
 dl_inference具备的Features如下：
 * 简化深度学习模型在生产环境上的推理服务部署，只需要将模型文件放入指定目录。
